@@ -1,0 +1,6 @@
+{
+  "name": "Sena Transit",
+  "description": "Next-gen transit & digital connectivity powering Mombasa, featuring Dual QR Web Booking and dynamic fare calculation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
