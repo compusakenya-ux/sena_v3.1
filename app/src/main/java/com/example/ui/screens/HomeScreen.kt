@@ -33,6 +33,7 @@ import androidx.compose.material.icons.filled.Work
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -253,13 +254,13 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Map Preview
+            // Map Preview - Expanded for wider GPS Map View
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(170.dp)
-                    .clip(RoundedCornerShape(20.dp))
-                    .border(1.dp, SenaBorder, RoundedCornerShape(20.dp))
+                    .height(240.dp)
+                    .clip(RoundedCornerShape(22.dp))
+                    .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(22.dp))
             ) {
                 SenaMapView(
                     isTrackingMode = false,
@@ -346,8 +347,7 @@ fun HomeScreen(
                 passengerOption = passengerOption,
                 dpiMultiplier = surgeMultiplier,
                 totalFare = totalCalculatedFare,
-                onPassengerOptionSelect = onPassengerOptionSelect,
-                onDistanceChange = onDistanceChange
+                onPassengerOptionSelect = onPassengerOptionSelect
             )
 
             Spacer(modifier = Modifier.height(16.dp))

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Calculate
@@ -24,6 +25,7 @@ import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
@@ -92,7 +94,6 @@ fun FareCalculationCard(
     dpiMultiplier: Float,
     totalFare: Double,
     onPassengerOptionSelect: (PassengerOption) -> Unit,
-    onDistanceChange: (Double) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val kmAbove1_5 = if (distanceKm > 1.5) distanceKm - 1.5 else 0.0
@@ -104,8 +105,8 @@ fun FareCalculationCard(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(22.dp))
-            .background(SenaSurface)
-            .border(1.dp, SenaBorder, RoundedCornerShape(22.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(22.dp))
             .padding(18.dp)
             .testTag("fare_calculation_formula_card")
     ) {
@@ -136,7 +137,7 @@ fun FareCalculationCard(
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(10.dp))
-                        .background(Color(0xFF131722))
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
                         .padding(horizontal = 8.dp, vertical = 4.dp)
                 ) {
                     Text(
@@ -171,10 +172,10 @@ fun FareCalculationCard(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(14.dp))
-                            .background(if (isSelected) SenaPeach.copy(alpha = 0.2f) else Color(0xFF131622))
+                            .background(if (isSelected) SenaPeach.copy(alpha = 0.2f) else MaterialTheme.colorScheme.surfaceVariant)
                             .border(
                                 width = if (isSelected) 1.5.dp else 1.dp,
-                                color = if (isSelected) SenaPeach else SenaBorder,
+                                color = if (isSelected) SenaPeach else MaterialTheme.colorScheme.outline,
                                 shape = RoundedCornerShape(14.dp)
                             )
                             .clickable { onPassengerOptionSelect(option) }
@@ -193,7 +194,7 @@ fun FareCalculationCard(
                                 text = "${option.label} (${option.factor}x)",
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = if (isSelected) SenaPeach else SenaTextPrimary
+                                color = if (isSelected) SenaPeach else MaterialTheme.colorScheme.onSurface
                             )
                         }
                     }
@@ -202,47 +203,81 @@ fun FareCalculationCard(
 
             Spacer(modifier = Modifier.height(14.dp))
 
-            // Trip Distance Slider
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+            // Automated GPS Route Distance Box (Replacing manual slider)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .border(1.dp, SenaElectricCyan.copy(alpha = 0.4f), RoundedCornerShape(14.dp))
+                    .padding(horizontal = 12.dp, vertical = 10.dp)
+                    .testTag("automated_gps_distance_card")
             ) {
-                Text(
-                    text = "ESTIMATED DISTANCE",
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.2.sp,
-                    color = SenaTextMuted
-                )
-                Text(
-                    text = "${String.format("%.1f", distanceKm)} KM ${if (distanceKm <= 1.5) "(No KM Surcharge <1.5KM)" else ""}",
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = if (distanceKm <= 1.5) SenaElectricCyan else SenaPeach
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clip(CircleShape)
+                                .background(SenaElectricCyan.copy(alpha = 0.15f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Info,
+                                contentDescription = "Automated GPS Distance",
+                                tint = SenaElectricCyan,
+                                modifier = Modifier.size(16.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column {
+                            Text(
+                                text = "AUTOMATED GPS DISTANCE",
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 1.sp,
+                                color = SenaTextMuted
+                            )
+                            Text(
+                                text = if (distanceKm <= 1.5) "No Surcharge (≤1.5 KM Base Included)" else "Automated via Route Telemetry",
+                                fontSize = 10.sp,
+                                color = if (distanceKm <= 1.5) SenaElectricCyan else SenaPeach
+                            )
+                        }
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(if (distanceKm <= 1.5) SenaElectricCyan.copy(alpha = 0.15f) else SenaPeach.copy(alpha = 0.15f))
+                            .padding(horizontal = 10.dp, vertical = 5.dp)
+                    ) {
+                        Text(
+                            text = "${String.format("%.1f", distanceKm)} KM",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Black,
+                            color = if (distanceKm <= 1.5) SenaElectricCyan else SenaPeach
+                        )
+                    }
+                }
             }
 
-            Slider(
-                value = distanceKm.toFloat(),
-                onValueChange = { onDistanceChange(it.toDouble()) },
-                valueRange = 0.5f..15.0f,
-                steps = 28,
-                colors = SliderDefaults.colors(
-                    thumbColor = SenaOrangeCTA,
-                    activeTrackColor = SenaPeach,
-                    inactiveTrackColor = Color(0xFF22283A)
-                ),
-                modifier = Modifier.fillMaxWidth().testTag("trip_distance_slider")
-            )
+            Spacer(modifier = Modifier.height(12.dp))
 
             // Exact Mathematical Formula Breakdown Box
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(14.dp))
-                    .background(Color(0xFF10131E))
-                    .border(1.dp, SenaBorder.copy(alpha = 0.7f), RoundedCornerShape(14.dp))
+                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f))
+                    .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(14.dp))
                     .padding(12.dp)
             ) {
                 Column {

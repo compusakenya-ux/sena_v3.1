@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ui.components.DriverQrCardDialog
 import com.example.ui.components.DriverWithdrawDialog
+import com.example.ui.components.PrivacyDataTermsDialog
 import com.example.ui.components.QrBookingDialog
 import com.example.ui.components.SenaBottomNav
 import com.example.ui.components.SenaNavTab
@@ -80,6 +81,7 @@ import com.example.ui.theme.SenaTextSecondary
 import com.example.ui.theme.SenaTheme
 import com.example.ui.viewmodel.ScreenState
 import com.example.ui.viewmodel.SenaViewModel
+import androidx.compose.material3.MaterialTheme
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -87,8 +89,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            SenaTheme {
-                SenaMainApp()
+            val viewModel: SenaViewModel = viewModel()
+            val isDarkMode by viewModel.isDarkMode.collectAsState()
+            SenaTheme(darkTheme = isDarkMode) {
+                SenaMainApp(viewModel = viewModel)
             }
         }
     }
@@ -98,6 +102,7 @@ class MainActivity : ComponentActivity() {
 fun SenaMainApp(
     viewModel: SenaViewModel = viewModel()
 ) {
+    val isDarkMode by viewModel.isDarkMode.collectAsState()
     val currentScreen by viewModel.currentScreen.collectAsState()
     val selectedTab by viewModel.selectedTab.collectAsState()
 
@@ -131,6 +136,15 @@ fun SenaMainApp(
     val showQrCardDialog by viewModel.showQrCardDialog.collectAsState()
     val showQrBookingDialog by viewModel.showQrBookingDialog.collectAsState()
 
+    // Privacy & KDPA Consent State
+    val showPrivacyDialog by viewModel.showPrivacyDialog.collectAsState()
+    val gpsConsent by viewModel.gpsConsent.collectAsState()
+    val financialConsent by viewModel.financialConsent.collectAsState()
+    val fleetAnalyticsConsent by viewModel.fleetAnalyticsConsent.collectAsState()
+    val marketingConsent by viewModel.marketingConsent.collectAsState()
+    val exportNotice by viewModel.exportNotice.collectAsState()
+    val erasureNotice by viewModel.erasureNotice.collectAsState()
+
     val rideHistory by viewModel.rideHistory.collectAsState()
     val walletTransactions by viewModel.walletTransactions.collectAsState()
 
@@ -146,14 +160,14 @@ fun SenaMainApp(
             drawerState = drawerState,
             drawerContent = {
                 ModalDrawerSheet(
-                    drawerContainerColor = SenaSurface,
-                    drawerContentColor = SenaTextPrimary,
+                    drawerContainerColor = MaterialTheme.colorScheme.surface,
+                    drawerContentColor = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.width(310.dp)
                 ) {
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(SenaSurface)
+                            .background(MaterialTheme.colorScheme.surface)
                             .padding(22.dp)
                     ) {
                         Spacer(modifier = Modifier.height(28.dp))
@@ -173,7 +187,7 @@ fun SenaMainApp(
                         )
 
                         Spacer(modifier = Modifier.height(18.dp))
-                        HorizontalDivider(color = SenaBorder)
+                        HorizontalDivider(color = MaterialTheme.colorScheme.outline)
                         Spacer(modifier = Modifier.height(16.dp))
 
                         // Drawer Items
@@ -232,10 +246,11 @@ fun SenaMainApp(
                         )
 
                         DrawerMenuItem(
-                            label = "Safety & Emergency SOS",
+                            label = "Privacy & Data Terms (KDPA)",
                             icon = Icons.Default.Shield,
                             onClick = {
                                 scope.launch { drawerState.close() }
+                                viewModel.openPrivacyDialog()
                             }
                         )
 
@@ -245,7 +260,7 @@ fun SenaMainApp(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(16.dp))
-                                .background(Color(0xFF131722))
+                                .background(MaterialTheme.colorScheme.surfaceVariant)
                                 .padding(14.dp)
                         ) {
                             Column {
@@ -286,7 +301,7 @@ fun SenaMainApp(
                         }
                     )
                 },
-                containerColor = SenaBackground
+                containerColor = MaterialTheme.colorScheme.background
             ) { innerPadding ->
                 AnimatedContent(
                     targetState = currentScreen,
@@ -338,7 +353,7 @@ fun SenaMainApp(
                         ScreenState.TRACKING -> TrackingScreen(
                             minutesLeft = minutesLeft,
                             destination = destinationLocation,
-                            onSafetyCenterClick = { },
+                            onSafetyCenterClick = { viewModel.openPrivacyDialog() },
                             onShareTripClick = { }
                         )
 
@@ -367,10 +382,32 @@ fun SenaMainApp(
 
                         ScreenState.PROFILE -> ProfileScreen(
                             userXp = userXp,
-                            userTier = userTier
+                            userTier = userTier,
+                            isDarkMode = isDarkMode,
+                            onToggleDarkMode = { dark -> viewModel.toggleDarkMode(dark) },
+                            onOpenPrivacyTerms = { viewModel.openPrivacyDialog() }
                         )
                     }
                 }
+            }
+
+            // Kenya Data Protection & Privacy Dialog (KDPA 2019 / ODPC)
+            if (showPrivacyDialog) {
+                PrivacyDataTermsDialog(
+                    gpsConsent = gpsConsent,
+                    financialConsent = financialConsent,
+                    fleetAnalyticsConsent = fleetAnalyticsConsent,
+                    marketingConsent = marketingConsent,
+                    exportNotice = exportNotice,
+                    erasureNotice = erasureNotice,
+                    onGpsConsentToggle = { viewModel.setGpsConsent(it) },
+                    onFinancialConsentToggle = { viewModel.setFinancialConsent(it) },
+                    onFleetAnalyticsToggle = { viewModel.setFleetAnalyticsConsent(it) },
+                    onMarketingToggle = { viewModel.setMarketingConsent(it) },
+                    onExportDataClick = { viewModel.exportPersonalData() },
+                    onErasureRequestClick = { viewModel.requestDataErasure() },
+                    onDismiss = { viewModel.dismissPrivacyDialog() }
+                )
             }
 
             // Driver B2C Withdrawal Dialog

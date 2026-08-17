@@ -281,8 +281,7 @@ fun QrBookingDialog(
                         passengerOption = passengerOption,
                         dpiMultiplier = dpiMultiplier,
                         totalFare = totalFare,
-                        onPassengerOptionSelect = { passengerOption = it },
-                        onDistanceChange = { distanceKm = it }
+                        onPassengerOptionSelect = { passengerOption = it }
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
