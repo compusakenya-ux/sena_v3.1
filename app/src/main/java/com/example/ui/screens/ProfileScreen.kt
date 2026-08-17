@@ -184,7 +184,7 @@ fun ProfileScreen(
                 .clip(RoundedCornerShape(18.dp))
                 .background(MaterialTheme.colorScheme.surface)
                 .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(18.dp))
-                .padding(16.dp)
+                .padding(14.dp)
                 .testTag("profile_appearance_card")
         ) {
             Row(
@@ -192,7 +192,12 @@ fun ProfileScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 6.dp)
+                ) {
                     Box(
                         modifier = Modifier
                             .size(36.dp)
@@ -208,30 +213,33 @@ fun ProfileScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(14.dp))
+                    Spacer(modifier = Modifier.width(12.dp))
 
                     Column {
                         Text(
                             text = "Theme Mode",
-                            fontSize = 14.sp,
+                            fontSize = 13.5.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onSurface,
+                            maxLines = 1
                         )
                         Text(
-                            text = if (isDarkMode) "Cyber Dark Active" else "Coastal Light Active",
-                            fontSize = 11.sp,
-                            color = SenaTextMuted
+                            text = if (isDarkMode) "Cyber Dark" else "Coastal Light",
+                            fontSize = 10.5.sp,
+                            color = SenaTextMuted,
+                            maxLines = 1
                         )
                     }
                 }
 
-                // Light / Dark Switcher Pills
+                // Light / Dark Switcher Pills (No overlap, single-line)
                 Row(
                     modifier = Modifier
                         .clip(RoundedCornerShape(20.dp))
                         .background(MaterialTheme.colorScheme.surfaceVariant)
                         .padding(3.dp),
-                    horizontalArrangement = Arrangement.spacedBy(2.dp)
+                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     // Light Toggle
                     Box(
@@ -239,23 +247,28 @@ fun ProfileScreen(
                             .clip(RoundedCornerShape(16.dp))
                             .background(if (!isDarkMode) SenaOrangeCTA else Color.Transparent)
                             .clickable { onToggleDarkMode(false) }
-                            .padding(horizontal = 10.dp, vertical = 6.dp)
+                            .padding(horizontal = 9.dp, vertical = 5.dp)
                             .testTag("theme_light_btn"),
                         contentAlignment = Alignment.Center
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.LightMode,
                                 contentDescription = "Light Mode",
                                 tint = if (!isDarkMode) Color.White else SenaTextMuted,
-                                modifier = Modifier.size(14.dp)
+                                modifier = Modifier.size(13.dp)
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
                                 text = "Light",
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = if (!isDarkMode) Color.White else SenaTextMuted
+                                color = if (!isDarkMode) Color.White else SenaTextMuted,
+                                maxLines = 1,
+                                softWrap = false
                             )
                         }
                     }
@@ -266,23 +279,28 @@ fun ProfileScreen(
                             .clip(RoundedCornerShape(16.dp))
                             .background(if (isDarkMode) SenaOrangeCTA else Color.Transparent)
                             .clickable { onToggleDarkMode(true) }
-                            .padding(horizontal = 10.dp, vertical = 6.dp)
+                            .padding(horizontal = 9.dp, vertical = 5.dp)
                             .testTag("theme_dark_btn"),
                         contentAlignment = Alignment.Center
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.DarkMode,
                                 contentDescription = "Dark Mode",
                                 tint = if (isDarkMode) Color.White else SenaTextMuted,
-                                modifier = Modifier.size(14.dp)
+                                modifier = Modifier.size(13.dp)
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
                                 text = "Dark",
                                 fontSize = 11.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = if (isDarkMode) Color.White else SenaTextMuted
+                                color = if (isDarkMode) Color.White else SenaTextMuted,
+                                maxLines = 1,
+                                softWrap = false
                             )
                         }
                     }
@@ -315,13 +333,12 @@ fun ProfileScreen(
                 onClick = {}
             )
 
-            // Row 3: Privacy & Data Terms (Replacing Help & Support Center, with KDPA 2019 onboarded)
+            // Row 3: Privacy & Data Terms (No badge window)
             ProfileSettingRow(
                 label = "Privacy & Data Terms",
                 subtitle = "KDPA 2019 & ODPC consent & telemetry rights",
                 icon = Icons.Default.Shield,
                 testTag = "profile_setting_privacy_terms",
-                badgeText = "KDPA 2019",
                 onClick = onOpenPrivacyTerms
             )
         }
@@ -336,7 +353,6 @@ private fun ProfileSettingRow(
     subtitle: String? = null,
     icon: ImageVector,
     testTag: String,
-    badgeText: String? = null,
     onClick: () -> Unit
 ) {
     Box(
@@ -356,7 +372,9 @@ private fun ProfileSettingRow(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp)
             ) {
                 Box(
                     modifier = Modifier
@@ -376,30 +394,12 @@ private fun ProfileSettingRow(
                 Spacer(modifier = Modifier.width(14.dp))
 
                 Column {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = label,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        if (badgeText != null) {
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(6.dp))
-                                    .background(SenaElectricCyan.copy(alpha = 0.15f))
-                                    .padding(horizontal = 6.dp, vertical = 2.dp)
-                            ) {
-                                Text(
-                                    text = badgeText,
-                                    fontSize = 9.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = SenaElectricCyan
-                                )
-                            }
-                        }
-                    }
+                    Text(
+                        text = label,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
                     if (subtitle != null) {
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
