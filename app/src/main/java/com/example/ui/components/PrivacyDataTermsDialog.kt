@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -83,21 +85,21 @@ fun PrivacyDataTermsDialog(
     ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth(0.92f)
+                .fillMaxWidth(0.94f)
+                .fillMaxHeight(0.86f)
                 .clip(RoundedCornerShape(24.dp))
                 .background(MaterialTheme.colorScheme.surface)
                 .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(24.dp))
-                .padding(20.dp)
                 .testTag("privacy_data_terms_dialog")
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(scrollState)
+                modifier = Modifier.fillMaxSize()
             ) {
-                // Header
+                // Fixed Header
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 18.dp, vertical = 16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -123,7 +125,7 @@ fun PrivacyDataTermsDialog(
                         Column {
                             Text(
                                 text = "Privacy & Data Terms",
-                                fontSize = 17.sp,
+                                fontSize = 16.5.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.onSurface
                             )
@@ -138,248 +140,267 @@ fun PrivacyDataTermsDialog(
 
                     IconButton(
                         onClick = onDismiss,
-                        modifier = Modifier.size(28.dp)
+                        modifier = Modifier.size(32.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "Close",
                             tint = SenaTextMuted,
-                            modifier = Modifier.size(18.dp)
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                 }
 
-                Spacer(modifier = Modifier.height(14.dp))
+                HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f))
 
-                // Legal Compliance Notice Card
-                Box(
+                // Scrollable Content
+                Column(
                     modifier = Modifier
+                        .weight(1f)
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(14.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant)
-                        .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(14.dp))
-                        .padding(12.dp)
+                        .verticalScroll(scrollState)
+                        .padding(horizontal = 18.dp, vertical = 12.dp)
                 ) {
-                    Column {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Default.Policy,
-                                contentDescription = null,
-                                tint = SenaPeach,
-                                modifier = Modifier.size(14.dp)
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
+                    // Legal Compliance Notice Card
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(14.dp))
+                            .padding(12.dp)
+                    ) {
+                        Column {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    imageVector = Icons.Default.Policy,
+                                    contentDescription = null,
+                                    tint = SenaPeach,
+                                    modifier = Modifier.size(14.dp)
+                                )
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text(
+                                    text = "ODPC KENYA REGISTRATION #SENA-KE-2024",
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    letterSpacing = 0.8.sp,
+                                    color = SenaPeach
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "ODPC KENYA REGISTRATION #SENA-KE-2024",
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 0.8.sp,
-                                color = SenaPeach
+                                text = "Sena Transit operates in strict compliance with the Office of the Data Protection Commissioner (ODPC) under KDPA No. 24 of 2019. You maintain full ownership, consent rights, and data portability of your telemetry and payment records.",
+                                fontSize = 11.sp,
+                                lineHeight = 15.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
-                        Spacer(modifier = Modifier.height(4.dp))
+                    }
+
+                    Spacer(modifier = Modifier.height(14.dp))
+
+                    Text(
+                        text = "DATA PROCESSING & CONSENT CONTROLS",
+                        fontSize = 10.5.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.sp,
+                        color = SenaTextMuted
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Consent Toggle 1: GPS Telemetry
+                    ConsentToggleCard(
+                        title = "Real-Time GPS Telemetry",
+                        subtitle = "Required for live boda/tuk-tuk dispatching, safety routing & emergency beaconing.",
+                        icon = Icons.Default.GpsFixed,
+                        checked = gpsConsent,
+                        onCheckedChange = onGpsConsentToggle,
+                        isRequired = true
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Consent Toggle 2: M-Pesa & Daraja Financial Records
+                    ConsentToggleCard(
+                        title = "Financial Transaction Auditing",
+                        subtitle = "Required by CBK & Safaricom Daraja B2C/C2B for anti-fraud and 85/15 fare reconciliation.",
+                        icon = Icons.Default.Payments,
+                        checked = financialConsent,
+                        onCheckedChange = onFinancialConsentToggle,
+                        isRequired = true
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Consent Toggle 3: EV Fleet & Battery Analytics
+                    ConsentToggleCard(
+                        title = "E-Mobility Fleet Analytics",
+                        subtitle = "Anonymized route optimization for Mombasa EV battery charging and swapping hubs.",
+                        icon = Icons.Default.Timeline,
+                        checked = fleetAnalyticsConsent,
+                        onCheckedChange = onFleetAnalyticsToggle,
+                        isRequired = false
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Consent Toggle 4: Marketing & Community SMS
+                    ConsentToggleCard(
+                        title = "Promotional SMS & Dynamic Pricing",
+                        subtitle = "Receive real-time DPI discount vouchers and Mombasa community transit alerts.",
+                        icon = Icons.Default.Lock,
+                        checked = marketingConsent,
+                        onCheckedChange = onMarketingToggle,
+                        isRequired = false
+                    )
+
+                    Spacer(modifier = Modifier.height(14.dp))
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f))
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = "DATA SUBJECT RIGHTS (KDPA SECTION 26 & 40)",
+                        fontSize = 10.5.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.sp,
+                        color = SenaTextMuted
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Export Data Button
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(12.dp))
+                            .clickable { onExportDataClick() }
+                            .padding(12.dp)
+                            .testTag("export_data_btn")
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    imageVector = Icons.Default.Download,
+                                    contentDescription = "Export Data",
+                                    tint = SenaElectricCyan,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                                Spacer(modifier = Modifier.width(10.dp))
+                                Column {
+                                    Text(
+                                        text = "Export My Personal Data (JSON)",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface
+                                    )
+                                    Text(
+                                        text = "Download all ride logs, wallet ledger & profile data",
+                                        fontSize = 10.sp,
+                                        color = SenaTextMuted
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+                    if (exportNotice != null) {
+                        Spacer(modifier = Modifier.height(6.dp))
                         Text(
-                            text = "Sena Transit operates in strict compliance with the Office of the Data Protection Commissioner (ODPC) under KDPA No. 24 of 2019. You maintain full ownership, consent rights, and data portability of your telemetry and payment records.",
+                            text = exportNotice,
                             fontSize = 11.sp,
-                            lineHeight = 15.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = SenaSuccessGreen,
+                            fontWeight = FontWeight.SemiBold
                         )
                     }
-                }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                Text(
-                    text = "DATA PROCESSING & CONSENT CONTROLS",
-                    fontSize = 10.5.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp,
-                    color = SenaTextMuted
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Consent Toggle 1: GPS Telemetry
-                ConsentToggleCard(
-                    title = "Real-Time GPS Telemetry",
-                    subtitle = "Required for live boda/tuk-tuk dispatching, safety routing & emergency beaconing.",
-                    icon = Icons.Default.GpsFixed,
-                    checked = gpsConsent,
-                    onCheckedChange = onGpsConsentToggle,
-                    isRequired = true
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Consent Toggle 2: M-Pesa & Daraja Financial Records
-                ConsentToggleCard(
-                    title = "Financial Transaction Auditing",
-                    subtitle = "Required by CBK & Safaricom Daraja B2C/C2B for anti-fraud and 85/15 fare reconciliation.",
-                    icon = Icons.Default.Payments,
-                    checked = financialConsent,
-                    onCheckedChange = onFinancialConsentToggle,
-                    isRequired = true
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Consent Toggle 3: EV Fleet & Battery Analytics
-                ConsentToggleCard(
-                    title = "E-Mobility Fleet Analytics",
-                    subtitle = "Anonymized route optimization for Mombasa EV battery charging and swapping hubs.",
-                    icon = Icons.Default.Timeline,
-                    checked = fleetAnalyticsConsent,
-                    onCheckedChange = onFleetAnalyticsToggle,
-                    isRequired = false
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Consent Toggle 4: Marketing & Community SMS
-                ConsentToggleCard(
-                    title = "Promotional SMS & Dynamic Pricing",
-                    subtitle = "Receive real-time DPI discount vouchers and Mombasa community transit alerts.",
-                    icon = Icons.Default.Lock,
-                    checked = marketingConsent,
-                    onCheckedChange = onMarketingToggle,
-                    isRequired = false
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-                HorizontalDivider(color = MaterialTheme.colorScheme.outline)
-                Spacer(modifier = Modifier.height(14.dp))
-
-                Text(
-                    text = "DATA SUBJECT RIGHTS (KDPA SECTION 26 & 40)",
-                    fontSize = 10.5.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp,
-                    color = SenaTextMuted
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Export My Data Button
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant)
-                        .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(12.dp))
-                        .clickable { onExportDataClick() }
-                        .padding(12.dp)
-                        .testTag("export_data_btn")
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                    // Right to Erasure Button
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                            .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(12.dp))
+                            .clickable { onErasureRequestClick() }
+                            .padding(12.dp)
+                            .testTag("erasure_request_btn")
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Default.Download,
-                                contentDescription = "Export Data",
-                                tint = SenaElectricCyan,
-                                modifier = Modifier.size(18.dp)
-                            )
-                            Spacer(modifier = Modifier.width(10.dp))
-                            Column {
-                                Text(
-                                    text = "Export My Personal Data (JSON)",
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = MaterialTheme.colorScheme.onSurface
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    imageVector = Icons.Default.DeleteOutline,
+                                    contentDescription = "Request Erasure",
+                                    tint = Color(0xFFEF4444),
+                                    modifier = Modifier.size(18.dp)
                                 )
-                                Text(
-                                    text = "Download all ride logs, wallet ledger & profile data",
-                                    fontSize = 10.sp,
-                                    color = SenaTextMuted
-                                )
+                                Spacer(modifier = Modifier.width(10.dp))
+                                Column {
+                                    Text(
+                                        text = "Right to Erasure / Data Anonymization",
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFFEF4444)
+                                    )
+                                    Text(
+                                        text = "De-identify telemetry and close Mombasa rider ID",
+                                        fontSize = 10.sp,
+                                        color = SenaTextMuted
+                                    )
+                                }
                             }
                         }
                     }
+
+                    if (erasureNotice != null) {
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(
+                            text = erasureNotice,
+                            fontSize = 11.sp,
+                            color = SenaPeach,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                    
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
 
-                if (exportNotice != null) {
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text(
-                        text = exportNotice,
-                        fontSize = 11.sp,
-                        color = SenaSuccessGreen,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
+                HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.6f))
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Right to Erasure Button
+                // Sticky Visible Footer
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant)
-                        .border(1.dp, MaterialTheme.colorScheme.outline, RoundedCornerShape(12.dp))
-                        .clickable { onErasureRequestClick() }
-                        .padding(12.dp)
-                        .testTag("erasure_request_btn")
+                        .background(MaterialTheme.colorScheme.surface)
+                        .padding(horizontal = 18.dp, vertical = 12.dp)
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                    Button(
+                        onClick = onDismiss,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                            .testTag("save_privacy_consent_btn"),
+                        shape = RoundedCornerShape(24.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = SenaOrangeCTA)
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Icon(
-                                imageVector = Icons.Default.DeleteOutline,
-                                contentDescription = "Request Erasure",
-                                tint = Color(0xFFEF4444),
-                                modifier = Modifier.size(18.dp)
-                            )
-                            Spacer(modifier = Modifier.width(10.dp))
-                            Column {
-                                Text(
-                                    text = "Right to Erasure / Data Anonymization",
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = Color(0xFFEF4444)
-                                )
-                                Text(
-                                    text = "De-identify telemetry and close Mombasa rider ID",
-                                    fontSize = 10.sp,
-                                    color = SenaTextMuted
-                                )
-                            }
-                        }
+                        Text(
+                            text = "Save & Confirm Data Preferences",
+                            fontSize = 13.5.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
                     }
-                }
-
-                if (erasureNotice != null) {
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text(
-                        text = erasureNotice,
-                        fontSize = 11.sp,
-                        color = SenaPeach,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(18.dp))
-
-                Button(
-                    onClick = onDismiss,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(46.dp)
-                        .testTag("save_privacy_consent_btn"),
-                    shape = RoundedCornerShape(23.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = SenaOrangeCTA)
-                ) {
-                    Text(
-                        text = "Save & Confirm Data Preferences",
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
                 }
             }
         }

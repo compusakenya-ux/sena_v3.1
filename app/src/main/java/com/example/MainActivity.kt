@@ -181,7 +181,7 @@ fun SenaMainApp(
                             color = SenaPeach
                         )
                         Text(
-                            text = "Powering Mobility • Mombasa, Kenya",
+                            text = "Powering Mobility-Safely",
                             fontSize = 12.sp,
                             color = SenaTextSecondary
                         )
@@ -255,29 +255,6 @@ fun SenaMainApp(
                         )
 
                         Spacer(modifier = Modifier.weight(1f))
-
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(16.dp))
-                                .background(MaterialTheme.colorScheme.surfaceVariant)
-                                .padding(14.dp)
-                        ) {
-                            Column {
-                                Text(
-                                    text = "⚡ Mombasa E-Mobility Fleet",
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = SenaElectricCyan
-                                )
-                                Text(
-                                    text = "Standard Bike & 3-Seater Tuk-Tuk • Dual QR & App",
-                                    fontSize = 10.sp,
-                                    color = SenaTextMuted,
-                                    modifier = Modifier.padding(top = 2.dp)
-                                )
-                            }
-                        }
                     }
                 }
             }
