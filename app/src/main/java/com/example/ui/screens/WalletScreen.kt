@@ -247,7 +247,7 @@ fun WalletScreen(
                 )
 
                 Text(
-                    text = "DARAJA B2C ACTIVE",
+                    text = "M-PESA B2C ACTIVE",
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 1.5.sp,

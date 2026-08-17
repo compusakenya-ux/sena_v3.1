@@ -391,7 +391,7 @@ fun QrBookingDialog(
                                 )
                                 Spacer(modifier = Modifier.width(6.dp))
                                 Text(
-                                    text = "M-Pesa STK",
+                                    text = "M-Pesa",
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = if (paymentMethod == "M-Pesa") SenaPeach else SenaTextPrimary

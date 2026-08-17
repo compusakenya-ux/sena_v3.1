@@ -221,10 +221,10 @@ fun PrivacyDataTermsDialog(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Consent Toggle 2: M-Pesa & Daraja Financial Records
+                    // Consent Toggle 2: M-Pesa Financial Records
                     ConsentToggleCard(
                         title = "Financial Transaction Auditing",
-                        subtitle = "Required by CBK & Safaricom Daraja B2C/C2B for anti-fraud and 85/15 fare reconciliation.",
+                        subtitle = "Required by CBK & Safaricom M-Pesa B2C/C2B for anti-fraud and 85/15 fare reconciliation.",
                         icon = Icons.Default.Payments,
                         checked = financialConsent,
                         onCheckedChange = onFinancialConsentToggle,

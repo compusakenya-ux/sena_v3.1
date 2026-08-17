@@ -270,7 +270,7 @@ class SenaViewModel(application: Application) : AndroidViewModel(application) {
                 )
                 repository.insertTransaction(
                     WalletTransaction(
-                        title = "Daraja B2C M-Pesa Payout",
+                        title = "B2C M-Pesa Payout",
                         subtitle = "Driver Withdrawal • 254712345678",
                         amount = 1500.00,
                         isCredit = false,
@@ -506,7 +506,7 @@ class SenaViewModel(application: Application) : AndroidViewModel(application) {
             _driverTotalRides.value += 1
 
             // Record transaction in Driver Wallet ledger
-            val paymentMethodLabel = if (_selectedPaymentMethod.value == "M-Pesa") "M-Pesa STK Push" else "Cash Payment"
+            val paymentMethodLabel = if (_selectedPaymentMethod.value == "M-Pesa") "M-Pesa" else "Cash Payment"
             repository.insertTransaction(
                 WalletTransaction(
                     title = "85% Driver Share (${cat.name})",
@@ -633,7 +633,7 @@ class SenaViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             _withdrawErrorMessage.value = null
             _isWithdrawProcessing.value = true
-            delay(2000) // Simulate Daraja B2C API response
+            delay(2000) // Simulate M-Pesa B2C API response
 
             _isWithdrawProcessing.value = false
 
@@ -644,7 +644,7 @@ class SenaViewModel(application: Application) : AndroidViewModel(application) {
             repository.insertTransaction(
                 WalletTransaction(
                     title = "B2C M-Pesa Withdrawal",
-                    subtitle = "Payout to ${_withdrawPhoneNumber.value} • Daraja B2C",
+                    subtitle = "Payout to ${_withdrawPhoneNumber.value} • M-Pesa B2C",
                     amount = amountNum,
                     isCredit = false,
                     status = "SUCCESS"

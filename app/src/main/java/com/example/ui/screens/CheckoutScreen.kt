@@ -193,9 +193,9 @@ fun CheckoutScreen(
                 .padding(bottom = 12.dp)
         )
 
-        // Option 1: M-Pesa (STK Push)
+        // Option 1: M-Pesa
         PaymentOptionCard(
-            title = "M-Pesa (Daraja STK Push)",
+            title = "M-Pesa",
             subtitle = "Push prompt sent to 254712•••5678",
             badgeText = "PRIMARY",
             icon = Icons.Default.PhoneAndroid,
@@ -300,7 +300,7 @@ fun CheckoutScreen(
         Spacer(modifier = Modifier.height(14.dp))
 
         Text(
-            text = "M-PESA DARAJA NATIVE API • 85/15 AUTOMATIC SPLIT",
+            text = "M-PESA INSTANT SETTLEMENT • 85/15 AUTOMATIC SPLIT",
             fontSize = 9.sp,
             letterSpacing = 1.2.sp,
             color = SenaTextMuted,

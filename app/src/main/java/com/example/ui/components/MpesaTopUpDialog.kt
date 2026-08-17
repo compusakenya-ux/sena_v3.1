@@ -105,7 +105,7 @@ fun MpesaTopUpDialog(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "Sending M-Pesa STK Push prompt...",
+                        text = "Sending M-Pesa prompt...",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                         color = SenaElectricCyan
@@ -166,7 +166,7 @@ fun MpesaTopUpDialog(
                             modifier = Modifier.testTag("send_stk_push_button")
                         ) {
                             Text(
-                                text = "STK PUSH",
+                                text = "TOP UP",
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White
                             )

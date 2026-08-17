@@ -126,7 +126,7 @@ fun DriverWithdrawDialog(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "Processing Daraja B2C payout...",
+                        text = "Processing M-Pesa B2C payout...",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                         color = SenaElectricCyan
